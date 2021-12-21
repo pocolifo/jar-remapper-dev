@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+group 'com.pocolifo'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def pluginGroup = 'com.pocolifo.jarremapper.devplugin'
+
+gradlePlugin {
+    plugins {
+        jarRemapperDev {
+            implementationClass = "${pluginGroup}.JarRemapperDevPlugin"
+            id = pluginGroup
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = 'JAR Remapper Dev'
+                description = 'Developer plugin for JAR Remapper'
+                artifactId = 'jar-remapper-dev'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://spdx.org/licenses/MIT.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'youngermax'
+                    }
+                }
+            }
+
+            from components.java
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
