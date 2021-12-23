@@ -4,7 +4,7 @@ plugins {
     id 'java-gradle-plugin'
 }
 
-group 'com.pocolifo'
+group 'com.pocolifo.jarremapper'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -35,11 +35,11 @@ gradlePlugin {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        plugin(MavenPublication) {
             pom {
                 name = 'JAR Remapper Dev'
                 description = 'Developer plugin for JAR Remapper'
-                artifactId = 'jar-remapper-dev'
+                artifactId = 'devplugin'
 
                 licenses {
                     license {
@@ -55,11 +55,23 @@ publishing {
                 }
             }
 
-            from components.java
+            from components['java']
         }
     }
 
     repositories {
-        mavenLocal()
+        maven {
+            url 'https://maven.services.pocolifo.com/releases'
+            name 'pocolifo'
+
+            credentials {
+                username = System.getenv("REPO_USERNAME")
+                password = System.getenv("REPO_PASSWORD")
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
 }
