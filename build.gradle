@@ -40,6 +40,7 @@ publishing {
                 name = 'JAR Remapper Dev'
                 description = 'Developer plugin for JAR Remapper'
                 artifactId = 'devplugin'
+                version = System.getenv("RELEASE_VERSION")
 
                 licenses {
                     license {
@@ -60,18 +61,22 @@ publishing {
     }
 
     repositories {
-        maven {
-            url 'https://maven.services.pocolifo.com/releases'
-            name 'pocolifo'
+        if (System.getenv("REPO_URL")) {
+            maven {
+                url System.getenv("REPO_URL")
+                name 'pocolifo'
 
-            credentials {
-                username = System.getenv("REPO_USERNAME")
-                password = System.getenv("REPO_PASSWORD")
-            }
+                credentials {
+                    username = System.getenv("REPO_USERNAME")
+                    password = System.getenv("REPO_PASSWORD")
+                }
 
-            authentication {
-                basic(BasicAuthentication)
+                authentication {
+                    basic(BasicAuthentication)
+                }
             }
+        } else {
+            mavenLocal()
         }
     }
 }
